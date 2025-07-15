@@ -4,9 +4,8 @@ import "./globals.css"
 import { CartProvider } from "@/hooks/use-cart"
 import { Toaster } from "@/components/ui/toaster"
 
-
 export const metadata: Metadata = {
-  title: "ذبيحتي - أجود أنواع اللحوم الطازجة",
+  title: "مواشي - أجود أنواع اللحوم الطازجة",
   description: "نقدم أجود أنواع اللحوم الطازجة والمضمونة الجودة",
 }
 
@@ -17,7 +16,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ar" dir="rtl">
-      <body >
+      <body>
         <CartProvider>
           {children}
           <Toaster />

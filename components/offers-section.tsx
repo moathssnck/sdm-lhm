@@ -6,7 +6,6 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Clock, Flame, ArrowLeft, ArrowRight } from "lucide-react"
-import { useCart } from "@/hooks/use-cart"
 
 const offers = [
   {
@@ -14,10 +13,9 @@ const offers = [
     title: "عرض نهاية الأسبوع",
     description: "خصم 30% على جميع أنواع اللحوم الطازجة",
     discount: "30%",
-    originalPrice: 20,
-    salePrice: 15,
-    price: 15,
-    image: "/صورة واتساب بتاريخ 1447-01-20 في 07.47.47_932d48eb.jpg",
+    originalPrice: 150,
+    salePrice: 105,
+    image: "/placeholder.svg?height=300&width=400",
     endTime: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // 2 days from now
     category: "لحوم طازجة",
     isHot: true,
@@ -27,10 +25,9 @@ const offers = [
     title: "باقة العائلة المميزة",
     description: "تشكيلة متنوعة من اللحوم تكفي لـ 6 أشخاص",
     discount: "25%",
-    originalPrice: 20,
-    salePrice: 15,
-    price: 15,
-    image: "/صورة واتساب بتاريخ 1447-01-20 في 07.51.02_52e67430.jpg",
+    originalPrice: 200,
+    salePrice: 150,
+    image: "/ ",
     endTime: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000), // 5 days from now
     category: "باقات العائلة",
     isHot: false,
@@ -40,9 +37,9 @@ const offers = [
     title: "عرض الشواء الخاص",
     description: "أفضل قطع اللحم للشواء مع البهارات مجاناً",
     discount: "40%",
-    originalPrice: 20.0,
-    salePrice: 15.0,
-    image: "/صورة واتساب بتاريخ 1447-01-20 في 06.34.48_eae6c2b5.jpg",
+    originalPrice: 120,
+    salePrice: 72,
+    image: "/placeholder.svg?height=300&width=400",
     endTime: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 days from now
     category: "شواء",
     isHot: true,
@@ -52,7 +49,6 @@ const offers = [
 export function OffersSection() {
   const [currentOffer, setCurrentOffer] = useState(0)
   const [timeLeft, setTimeLeft] = useState<{ [key: number]: string }>({})
-  const {addItem} = useCart() as any
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -173,7 +169,6 @@ export function OffersSection() {
                   </div>
 
                   <Button
-                  onClick={()=>addItem(offers[currentOffer])}
                     size="lg"
                     className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white shadow-lg transform hover:scale-105 transition-all duration-200"
                   >
@@ -255,7 +250,6 @@ export function OffersSection() {
                       </span>
                     </div>
                     <Button
-                    onClick={()=>addItem(offer)}
                       size="sm"
                       variant="outline"
                       className="group-hover:bg-red-500 group-hover:text-white transition-colors bg-transparent"

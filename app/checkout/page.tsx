@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { CheckoutForm } from "@/components/checkout-form"
@@ -12,9 +12,23 @@ export default function CheckoutPage() {
   const { items, total, clearCart } = useCart()
   const router = useRouter()
   const [isProcessing, setIsProcessing] = useState(false)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (mounted && items.length === 0) {
+      router.push("/cart")
+    }
+  }, [mounted, items.length, router])
+
+  if (!mounted) {
+    return null
+  }
 
   if (items.length === 0) {
-    window.location.href="/cart"
     return null
   }
 
@@ -29,8 +43,7 @@ export default function CheckoutPage() {
 
     // Clear cart and redirect to payment
     clearCart()
-    window.location.href=`/payment?orderId=${orderId}&amount=${total}`
-
+    router.push(`/payment?orderId=${orderId}&amount=${total}`)
   }
 
   return (
