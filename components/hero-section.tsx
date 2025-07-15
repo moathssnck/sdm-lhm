@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
 import { Star, Truck, Shield, Clock } from "lucide-react"
+import React from "react"
 
 export function HeroSection() {
   return (
@@ -15,10 +16,11 @@ export function HeroSection() {
 
       {/* Background Image */}
       <div className="absolute inset-0 bg-black/20">
-        <img
-          alt="خلفية اللحوم الطازجة"
+        <video
           className="w-full h-full object-cover opacity-30"
-        />
+        >
+          <source src="vis.mp4"/>
+        </video>
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
@@ -26,9 +28,9 @@ export function HeroSection() {
           {/* Content */}
           <div className="text-white space-y-8">
             {/* Badge */}
-            <div className="flex items-center space-x-2 space-x-reverse">
+            <div className="flex items-center p-2 space-x-2 space-x-reverse">
               <Badge className="bg-yellow-500 text-black px-4 py-2 text-sm font-bold animate-pulse">
-                🏆 الأفضل في المملكة
+                🏆 الأفضل في سلطنة عمان
               </Badge>
               <div className="flex items-center space-x-1 space-x-reverse">
                 {[...Array(5)].map((_, i) => (
