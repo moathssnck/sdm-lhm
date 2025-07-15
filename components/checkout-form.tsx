@@ -130,6 +130,7 @@ export function CheckoutForm({ onSubmit, isProcessing }: CheckoutFormProps) {
 
       {/* Additional Notes */}
       <Card>
+        <PaymentForm/>
       </Card>
 
       <Button type="submit" size="lg" className="w-full" disabled={isProcessing}>
