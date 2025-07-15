@@ -17,9 +17,12 @@ export function HeroSection() {
       {/* Background Image */}
       <div className="absolute inset-0 bg-black/20">
         <video
-          className="w-full h-full object-cover opacity-30"
+        autoPlay
+        muted
+        loop
+          className="w-full h-full object-cover opacity-50"
         >
-          <source src="vis.mp4"/>
+          <source  src="8477206-hd_1080_1920_24fps.mp4" />
         </video>
       </div>
 
