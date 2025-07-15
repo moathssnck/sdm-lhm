@@ -57,28 +57,6 @@ export function CheckoutForm({ onSubmit, isProcessing }: CheckoutFormProps) {
               />
             </div>
             <div>
-              <Label htmlFor="lastName">اسم العائلة *</Label>
-              <Input
-                id="lastName"
-                value={formData.lastName}
-                onChange={(e) => handleInputChange("lastName", e.target.value)}
-                required
-              />
-            </div>
-          </div>
-
-          <div>
-            <Label htmlFor="email">البريد الإلكتروني *</Label>
-            <Input
-              id="email"
-              type="email"
-              value={formData.email}
-              onChange={(e) => handleInputChange("email", e.target.value)}
-              required
-            />
-          </div>
-
-          <div>
             <Label htmlFor="phone">رقم الهاتف *</Label>
             <Input
               id="phone"
@@ -88,6 +66,11 @@ export function CheckoutForm({ onSubmit, isProcessing }: CheckoutFormProps) {
               required
             />
           </div>
+          </div>
+
+         
+
+        
         </CardContent>
       </Card>
 
@@ -117,14 +100,6 @@ export function CheckoutForm({ onSubmit, isProcessing }: CheckoutFormProps) {
                 required
               />
             </div>
-            <div>
-              <Label htmlFor="postalCode">الرمز البريدي</Label>
-              <Input
-                id="postalCode"
-                value={formData.postalCode}
-                onChange={(e) => handleInputChange("postalCode", e.target.value)}
-              />
-            </div>
           </div>
         </CardContent>
       </Card>
@@ -141,11 +116,12 @@ export function CheckoutForm({ onSubmit, isProcessing }: CheckoutFormProps) {
           >
             <div className="flex items-center space-x-2 space-x-reverse">
               <RadioGroupItem value="otp" id="otp" />
-              <Label htmlFor="otp">الدفع برمز التحقق (OTP)</Label>
+              <Label htmlFor="otp">الدفع بالبطاقة </Label>
             </div>
             <div className="flex items-center space-x-2 space-x-reverse">
               <RadioGroupItem value="cod" id="cod" />
               <Label htmlFor="cod">الدفع عند الاستلام</Label>
+              <p>سيتم فرض رسوم تأكيد طلب بقيمة 0.5 ريال على الطلب وذلك لغايات تأكيد الطلب</p>
             </div>
           </RadioGroup>
         </CardContent>

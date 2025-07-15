@@ -16,7 +16,7 @@ export function HeroSection() {
       {/* Background Image */}
       <div className="absolute inset-0 bg-black/20">
         <img
-          src="/placeholder.svg?height=800&width=1200"
+          src="/photo_6030690643082331765_y.jpg"
           alt="خلفية اللحوم الطازجة"
           className="w-full h-full object-cover opacity-30"
         />
