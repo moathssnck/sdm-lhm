@@ -15,7 +15,7 @@ const offers = [
     discount: "30%",
     originalPrice: 150,
     salePrice: 105,
-    image: "/placeholder.svg?height=300&width=400",
+    image: "/صورة واتساب بتاريخ 1447-01-20 في 07.47.47_932d48eb.jpg",
     endTime: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // 2 days from now
     category: "لحوم طازجة",
     isHot: true,
@@ -27,7 +27,7 @@ const offers = [
     discount: "25%",
     originalPrice: 200,
     salePrice: 150,
-    image: "/placeholder.svg?height=300&width=400",
+    image: "/صورة واتساب بتاريخ 1447-01-20 في 07.51.02_52e67430.jpg",
     endTime: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000), // 5 days from now
     category: "باقات العائلة",
     isHot: false,
@@ -39,7 +39,7 @@ const offers = [
     discount: "40%",
     originalPrice: 120,
     salePrice: 72,
-    image: "/placeholder.svg?height=300&width=400",
+    image: "/صورة واتساب بتاريخ 1447-01-20 في 07.48.24_bf65c356.jpg",
     endTime: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 days from now
     category: "شواء",
     isHot: true,

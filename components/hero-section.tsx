@@ -16,7 +16,6 @@ export function HeroSection() {
       {/* Background Image */}
       <div className="absolute inset-0 bg-black/20">
         <img
-          src="/photo_6030690643082331765_y.jpg"
           alt="خلفية اللحوم الطازجة"
           className="w-full h-full object-cover opacity-30"
         />
@@ -117,7 +116,7 @@ export function HeroSection() {
           <div className="relative">
             <div className="relative z-10">
               <img
-                src="/placeholder.svg?height=600&width=500"
+                src="/صورة واتساب بتاريخ 1447-01-20 في 07.29.55_9c8096a0.jpg"
                 alt="عرض اللحوم المميزة"
                 className="w-full h-auto rounded-2xl shadow-2xl transform hover:scale-105 transition-transform duration-500"
               />
