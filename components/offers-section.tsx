@@ -2,10 +2,12 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Clock, Flame, ArrowLeft, ArrowRight } from "lucide-react"
+import { Clock, Flame, ArrowLeft, ArrowRight, ShoppingCart, Plus } from "lucide-react"
+import { useCart } from "@/hooks/use-cart"
 
 const offers = [
   {
@@ -13,9 +15,9 @@ const offers = [
     title: "عرض نهاية الأسبوع",
     description: "خصم 30% على جميع أنواع اللحوم الطازجة",
     discount: "30%",
-    originalPrice: 150,
-    salePrice: 105,
-    image: "/placeholder.svg?height=300&width=400",
+    originalPrice: 20,
+    salePrice: 15,
+    image: "  صورة واتساب بتاريخ 1447-01-20 في 06.34.48_io3300fe50.jpg",
     endTime: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // 2 days from now
     category: "لحوم طازجة",
     isHot: true,
@@ -25,9 +27,9 @@ const offers = [
     title: "باقة العائلة المميزة",
     description: "تشكيلة متنوعة من اللحوم تكفي لـ 6 أشخاص",
     discount: "25%",
-    originalPrice: 200,
-    salePrice: 150,
-    image: "/ ",
+    originalPrice: 20,
+    salePrice: 15,
+    image: "/صورة واتساب بتاريخ 1447-01-20 في 06.35.35_f3af146c.jpg",
     endTime: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000), // 5 days from now
     category: "باقات العائلة",
     isHot: false,
@@ -37,9 +39,9 @@ const offers = [
     title: "عرض الشواء الخاص",
     description: "أفضل قطع اللحم للشواء مع البهارات مجاناً",
     discount: "40%",
-    originalPrice: 120,
-    salePrice: 72,
-    image: "/placeholder.svg?height=300&width=400",
+    originalPrice: 20,
+    salePrice: 14.9,
+    image: "/صورة واتساب بتاريخ 1447-01-20 في 07.51.02_52e67430.jpg",
     endTime: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 days from now
     category: "شواء",
     isHot: true,
@@ -49,11 +51,11 @@ const offers = [
 export function OffersSection() {
   const [currentOffer, setCurrentOffer] = useState(0)
   const [timeLeft, setTimeLeft] = useState<{ [key: number]: string }>({})
+  const { addToCart, setIsCartOpen, getTotalItems } = useCart()
 
   useEffect(() => {
     const timer = setInterval(() => {
       const newTimeLeft: { [key: number]: string } = {}
-
       offers.forEach((offer) => {
         const now = new Date().getTime()
         const endTime = offer.endTime.getTime()
@@ -64,13 +66,11 @@ export function OffersSection() {
           const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
           const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60))
           const seconds = Math.floor((difference % (1000 * 60)) / 1000)
-
           newTimeLeft[offer.id] = `${days}د ${hours}س ${minutes}ق ${seconds}ث`
         } else {
           newTimeLeft[offer.id] = "انتهى العرض"
         }
       })
-
       setTimeLeft(newTimeLeft)
     }, 1000)
 
@@ -93,6 +93,33 @@ export function OffersSection() {
     setCurrentOffer((prev) => (prev - 1 + offers.length) % offers.length)
   }
 
+  const handleAddToCart = (offer: (typeof offers)[0]) => {
+    addToCart({
+      id: offer.id,
+      title: offer.title,
+      price: offer.salePrice,
+      originalPrice: offer.originalPrice,
+      discount: offer.discount,
+      image: offer.image,
+      category: offer.category,
+    })
+  }
+
+  const handleAddAllToCart = () => {
+    offers.forEach((offer) => {
+      addToCart({
+        id: offer.id,
+        title: offer.title,
+        price: offer.salePrice,
+        originalPrice: offer.originalPrice,
+        discount: offer.discount,
+        image: offer.image,
+        category: offer.category,
+      })
+    })
+    setIsCartOpen(true)
+  }
+
   return (
     <section className="py-16 bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50 relative overflow-hidden">
       {/* Background Pattern */}
@@ -111,7 +138,17 @@ export function OffersSection() {
             </h2>
             <Flame className="w-8 h-8 text-red-500 animate-pulse" />
           </div>
-          <p className="text-xl text-gray-600">لا تفوت هذه الفرصة الذهبية للحصول على أجود اللحوم بأسعار مميزة</p>
+          <p className="text-xl text-gray-600 mb-6">لا تفوت هذه الفرصة الذهبية للحصول على أجود اللحوم بأسعار مميزة</p>
+
+          {/* Add All to Cart Button */}
+          <Button
+            onClick={handleAddAllToCart}
+            size="lg"
+            className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white shadow-lg transform hover:scale-105 transition-all duration-200 mb-8"
+          >
+            <Plus className="w-5 h-5 ml-2" />
+            إضافة جميع العروض للسلة
+          </Button>
         </div>
 
         {/* Main Offer Carousel */}
@@ -121,19 +158,18 @@ export function OffersSection() {
               <div className="grid grid-cols-1 lg:grid-cols-2">
                 {/* Image Section */}
                 <div className="relative h-80 lg:h-96">
-                  <img
+                  <Image
                     src={offers[currentOffer].image || "/placeholder.svg"}
                     alt={offers[currentOffer].title}
-                    className="w-full h-full object-cover"
+                    fill
+                    className="object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-
                   {offers[currentOffer].isHot && (
                     <Badge className="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 text-sm font-bold animate-bounce">
                       🔥 عرض ساخن
                     </Badge>
                   )}
-
                   <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2">
                     <Badge variant="secondary" className="text-xs">
                       {offers[currentOffer].category}
@@ -168,12 +204,19 @@ export function OffersSection() {
                     </div>
                   </div>
 
-                  <Button
-                    size="lg"
-                    className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white shadow-lg transform hover:scale-105 transition-all duration-200"
-                  >
-                    اطلب الآن واستفد من العرض
-                  </Button>
+                  <div className="flex space-x-3 space-x-reverse">
+                    <Button
+                      onClick={() => handleAddToCart(offers[currentOffer])}
+                      size="lg"
+                      className="flex-1 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white shadow-lg transform hover:scale-105 transition-all duration-200"
+                    >
+                      <ShoppingCart className="w-5 h-5 ml-2" />
+                      أضف للسلة
+                    </Button>
+                    <Button onClick={() => setIsCartOpen(true)} variant="outline" size="lg" className="px-4">
+                      السلة ({getTotalItems()})
+                    </Button>
+                  </div>
                 </div>
               </div>
             </CardContent>
@@ -223,15 +266,14 @@ export function OffersSection() {
             >
               <CardContent className="p-0">
                 <div className="relative h-48">
-                  <img
+                  <Image
                     src={offer.image || "/placeholder.svg"}
                     alt={offer.title}
-                    className="w-full h-full object-cover rounded-t-lg"
+                    fill
+                    className="object-cover rounded-t-lg"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent rounded-t-lg"></div>
-
                   <Badge className="absolute top-3 right-3 bg-red-500 text-white">-{offer.discount}</Badge>
-
                   <div className="absolute bottom-3 right-3 left-3 text-white">
                     <h4 className="font-bold text-lg mb-1">{offer.title}</h4>
                     <div className="flex items-center space-x-2 space-x-reverse">
@@ -240,7 +282,6 @@ export function OffersSection() {
                     </div>
                   </div>
                 </div>
-
                 <div className="p-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-1 space-x-reverse">
@@ -250,11 +291,15 @@ export function OffersSection() {
                       </span>
                     </div>
                     <Button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleAddToCart(offer)
+                      }}
                       size="sm"
-                      variant="outline"
-                      className="group-hover:bg-red-500 group-hover:text-white transition-colors bg-transparent"
+                      className="bg-green-600 hover:bg-green-700 text-white transition-colors"
                     >
-                      اطلب الآن
+                      <ShoppingCart className="w-4 h-4 ml-1" />
+                      أضف للسلة
                     </Button>
                   </div>
                 </div>
