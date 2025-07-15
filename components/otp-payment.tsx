@@ -1,148 +1,196 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { Input } from "@/components/ui/input"
+import { useState } from "react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Shield, Smartphone, RefreshCw, CheckCircle, AlertCircle } from "lucide-react"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { toast } from "@/hooks/use-toast"
+import { Loader2, Shield } from "lucide-react"
 
-interface OTPVerificationProps {
-  transactionId: string
-  phoneNumber: string
-  onVerify: (otpCode: string) => void
-  onResend: () => void
-  isVerifying: boolean
-  error?: string
+interface OTPPaymentProps {
+  orderId: string
+  amount: number
+  onSuccess: () => void
 }
 
-// Update the component to work better within a dialog
-export function OTPVerification({
-  transactionId,
-  phoneNumber,
-  onVerify,
-  onResend,
-  isVerifying,
-  error,
-}: OTPVerificationProps) {
-  const [otpCode, setOtpCode] = useState("")
-  const [timeLeft, setTimeLeft] = useState(300) // 5 minutes
-  const [canResend, setCanResend] = useState(false)
+export function OTPPayment({ orderId, amount, onSuccess }: OTPPaymentProps) {
+  const [step, setStep] = useState<"phone" | "otp" | "processing">("phone")
+  const [phoneNumber, setPhoneNumber] = useState("")
+  const [otp, setOtp] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
+  const [countdown, setCountdown] = useState(0)
 
-  useEffect(() => {
-    if (timeLeft > 0) {
-      const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000)
-      return () => clearTimeout(timer)
-    } else {
-      setCanResend(true)
+  const handleSendOTP = async () => {
+    if (!phoneNumber || phoneNumber.length < 10) {
+      toast({
+        title: "خطأ",
+        description: "يرجى إدخال رقم هاتف صحيح",
+        variant: "destructive",
+      })
+      return
     }
-  }, [timeLeft])
 
-  const handleOTPChange = (value: string) => {
-    const numericValue = value.replace(/\D/g, "").slice(0, 6)
-    setOtpCode(numericValue)
+    setIsLoading(true)
 
-    // Auto-submit when 6 digits are entered
-    if (numericValue.length === 6) {
-      onVerify(numericValue)
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 2000))
+
+    setIsLoading(false)
+    setStep("otp")
+    setCountdown(60)
+
+    // Start countdown
+    const timer = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer)
+          return 0
+        }
+        return prev - 1
+      })
+    }, 1000)
+
+    toast({
+      title: "تم إرسال الرمز",
+      description: `تم إرسال رمز التحقق إلى ${phoneNumber}`,
+    })
+  }
+
+  const handleVerifyOTP = async () => {
+    if (!otp || otp.length !== 6) {
+      toast({
+        title: "خطأ",
+        description: "يرجى إدخال رمز التحقق المكون من 6 أرقام",
+        variant: "destructive",
+      })
+      return
     }
+
+    setStep("processing")
+
+    // Simulate payment processing
+    await new Promise((resolve) => setTimeout(resolve, 3000))
+
+    toast({
+      title: "تم الدفع بنجاح",
+      description: "تم تأكيد طلبك وسيتم التوصيل قريباً",
+    })
+
+    onSuccess()
   }
 
-  const handleResend = () => {
-    onResend()
-    setTimeLeft(300)
-    setCanResend(false)
-    setOtpCode("")
+  const handleResendOTP = async () => {
+    setIsLoading(true)
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+    setIsLoading(false)
+    setCountdown(60)
+
+    const timer = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer)
+          return 0
+        }
+        return prev - 1
+      })
+    }, 1000)
+
+    toast({
+      title: "تم إعادة الإرسال",
+      description: "تم إرسال رمز تحقق جديد",
+    })
   }
 
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60)
-    const secs = seconds % 60
-    return `${mins}:${secs.toString().padStart(2, "0")}`
+  if (step === "processing") {
+    return (
+      <Card>
+        <CardContent className="p-8 text-center">
+          <Loader2 className="w-12 h-12 animate-spin text-green-600 mx-auto mb-4" />
+          <h3 className="text-lg font-semibold mb-2">جاري معالجة الدفع...</h3>
+          <p className="text-gray-600">يرجى الانتظار، لا تغلق هذه الصفحة</p>
+        </CardContent>
+      </Card>
+    )
   }
-
-  const maskedPhone = phoneNumber.slice(-4).padStart(phoneNumber.length, "*")
 
   return (
-    <div className="space-y-6 p-4">
-      <div className="text-center">
-        <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <Smartphone className="w-8 h-8 text-blue-600" />
-        </div>
-        <p className="text-gray-600 text-sm mb-6">تم إرسال رمز التحقق إلى رقم {maskedPhone}</p>
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center justify-center space-x-2 space-x-reverse">
+          <Shield className="w-5 h-5 text-green-600" />
+          <span>الدفع الآمن برمز التحقق</span>
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        {step === "phone" && (
+          <>
+            <div>
+              <Label htmlFor="phone">رقم الهاتف *</Label>
+              <Input
+                id="phone"
+                type="tel"
+                placeholder="05xxxxxxxx"
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                maxLength={10}
+              />
+              <p className="text-sm text-gray-600 mt-1">سيتم إرسال رمز التحقق إلى هذا الرقم</p>
+            </div>
 
-        <p className="text-sm text-gray-600 mb-4">أدخل الرمز المكون من 6 أرقام</p>
-
-        {/* OTP Input */}
-        <div className="flex justify-center mb-6">
-          <Input
-            value={otpCode}
-            onChange={(e) => handleOTPChange(e.target.value)}
-            placeholder="000000"
-            className="text-center text-2xl font-mono tracking-widest w-48 h-14"
-            maxLength={6}
-          />
-        </div>
-
-        {/* Error Message */}
-        {error && (
-          <div className="flex items-center justify-center space-x-2 space-x-reverse text-red-600 mb-4">
-            <AlertCircle className="w-4 h-4" />
-            <span className="text-sm">{error}</span>
-          </div>
+            <Button onClick={handleSendOTP} className="w-full" size="lg" disabled={isLoading}>
+              {isLoading ? (
+                <>
+                  <Loader2 className="w-4 h-4 ml-2 animate-spin" />
+                  جاري الإرسال...
+                </>
+              ) : (
+                "إرسال رمز التحقق"
+              )}
+            </Button>
+          </>
         )}
 
-        {/* Timer */}
-        <div className="flex items-center justify-center space-x-2 space-x-reverse mb-6">
-          <Shield className="w-4 h-4 text-green-500" />
-          <span className="text-sm text-gray-600">
-            {timeLeft > 0 ? `انتهاء الصلاحية خلال ${formatTime(timeLeft)}` : "انتهت صلاحية الرمز"}
-          </span>
-        </div>
-
-        {/* Verify Button */}
-        <Button
-          onClick={() => onVerify(otpCode)}
-          disabled={otpCode.length !== 6 || isVerifying}
-          className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-semibold py-3 rounded-xl shadow-lg mb-4"
-        >
-          {isVerifying ? (
-            <div className="flex items-center space-x-2 space-x-reverse">
-              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-              <span>جاري التحقق...</span>
+        {step === "otp" && (
+          <>
+            <div className="text-center">
+              <p className="text-gray-600 mb-4">تم إرسال رمز التحقق إلى {phoneNumber}</p>
             </div>
-          ) : (
-            <div className="flex items-center space-x-2 space-x-reverse">
-              <CheckCircle className="w-5 h-5" />
-              <span>تحقق من الرمز</span>
+
+            <div>
+              <Label htmlFor="otp">رمز التحقق *</Label>
+              <Input
+                id="otp"
+                type="text"
+                placeholder="000000"
+                value={otp}
+                onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                maxLength={6}
+                className="text-center text-2xl tracking-widest"
+              />
+              <p className="text-sm text-gray-600 mt-1">أدخل الرمز المكون من 6 أرقام</p>
             </div>
-          )}
-        </Button>
 
-        {/* Resend Button */}
-        <Button
-          onClick={handleResend}
-          disabled={!canResend}
-          variant="outline"
-          className="w-full border-2 border-blue-200 hover:border-blue-400 bg-transparent"
-        >
-          <RefreshCw className="w-4 h-4 ml-2" />
-          {canResend ? "إعادة إرسال الرمز" : `إعادة الإرسال خلال ${formatTime(timeLeft)}`}
-        </Button>
-      </div>
+            <div className="flex space-x-4 space-x-reverse">
+              <Button onClick={handleVerifyOTP} className="flex-1" size="lg">
+                تأكيد الدفع
+              </Button>
 
-      {/* Security Info */}
-      <div className="bg-blue-50 p-4 rounded-lg">
-        <div className="flex items-start space-x-3 space-x-reverse">
-          <Shield className="w-5 h-5 text-blue-600 mt-0.5" />
-          <div className="text-sm text-blue-700">
-            <p className="font-medium mb-1">معلومات الأمان:</p>
-            <ul className="list-disc list-inside space-y-1">
-              <li>لا تشارك رمز التحقق مع أي شخص</li>
-              <li>الرمز صالح لمدة 5 دقائق فقط</li>
-              <li>رقم المعاملة: {transactionId}</li>
-            </ul>
-          </div>
+              <Button onClick={handleResendOTP} variant="outline" disabled={countdown > 0 || isLoading} size="lg">
+                {countdown > 0 ? `إعادة الإرسال (${countdown})` : "إعادة الإرسال"}
+              </Button>
+            </div>
+
+            <Button onClick={() => setStep("phone")} variant="ghost" className="w-full">
+              تغيير رقم الهاتف
+            </Button>
+          </>
+        )}
+
+        <div className="bg-blue-50 p-4 rounded-lg">
+          <p className="text-sm text-blue-700 text-center">🔒 جميع المعاملات محمية بأعلى معايير الأمان</p>
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   )
 }
