@@ -118,7 +118,7 @@ export function HeroSection() {
               <img
                 src="/صورة واتساب بتاريخ 1447-01-20 في 07.29.55_9c8096a0.jpg"
                 alt="عرض اللحوم المميزة"
-                className="w-full h-auto rounded-2xl shadow-2xl transform hover:scale-105 transition-transform duration-500"
+                className="w-full h-auto py-4 rounded-2xl shadow-2xl transform hover:scale-105 transition-transform duration-500"
               />
 
               {/* Floating Cards */}
@@ -129,12 +129,9 @@ export function HeroSection() {
                 </div>
               </div>
 
-              <div className="absolute -bottom-4 -left-4 bg-red-500 text-white rounded-lg p-4 shadow-xl">
-                <div className="text-center">
-                  <div className="text-2xl font-bold">30%</div>
-                  <div className="text-xs">خصم</div>
-                </div>
-              </div>
+           <Button className="w-full my-2  bg-gradient-to-r from-yellow-400 to-orange-400 ">
+            احصل على العرض
+           </Button>
             </div>
 
             {/* Background Decoration */}
