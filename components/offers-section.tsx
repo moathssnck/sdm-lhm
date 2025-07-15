@@ -150,8 +150,8 @@ export function OffersSection() {
 
                   {/* Price Section */}
                   <div className="flex items-center space-x-4 space-x-reverse mb-6">
-                    <div className="text-4xl font-bold text-green-600">{offers[currentOffer].salePrice} ر.س</div>
-                    <div className="text-2xl text-gray-500 line-through">{offers[currentOffer].originalPrice} ر.س</div>
+                    <div className="text-4xl font-bold text-green-600">{offers[currentOffer].salePrice} ر.ع</div>
+                    <div className="text-2xl text-gray-500 line-through">{offers[currentOffer].originalPrice} ر.ع</div>
                     <Badge className="bg-red-500 text-white text-lg px-3 py-1">
                       خصم {offers[currentOffer].discount}
                     </Badge>
@@ -235,8 +235,8 @@ export function OffersSection() {
                   <div className="absolute bottom-3 right-3 left-3 text-white">
                     <h4 className="font-bold text-lg mb-1">{offer.title}</h4>
                     <div className="flex items-center space-x-2 space-x-reverse">
-                      <span className="text-xl font-bold">{offer.salePrice} ر.س</span>
-                      <span className="text-sm line-through opacity-75">{offer.originalPrice} ر.س</span>
+                      <span className="text-xl font-bold">{offer.salePrice} ر.ع</span>
+                      <span className="text-sm line-through opacity-75">{offer.originalPrice} ر.ع</span>
                     </div>
                   </div>
                 </div>

@@ -64,7 +64,7 @@ export default function CartPage() {
               <CardContent className="space-y-4">
                 <div className="flex justify-between">
                   <span>المجموع الفرعي:</span>
-                  <span>{total.toFixed(2)} ر.س</span>
+                  <span>{total.toFixed(2)} ر.ع</span>
                 </div>
                 <div className="flex justify-between">
                   <span>رسوم التوصيل:</span>
@@ -73,7 +73,7 @@ export default function CartPage() {
                 <div className="border-t pt-4">
                   <div className="flex justify-between text-lg font-bold">
                     <span>المجموع الكلي:</span>
-                    <span>{total.toFixed(2)} ر.س</span>
+                    <span>{total.toFixed(2)} ر.ع</span>
                   </div>
                 </div>
 

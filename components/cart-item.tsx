@@ -26,7 +26,7 @@ export function CartItem({ item }: CartItemProps) {
 
           <div className="flex-1">
             <h3 className="font-semibold text-gray-900">{item.name}</h3>
-            <p className="text-green-600 font-bold">{item.price} ر.س</p>
+            <p className="text-green-600 font-bold">{item.price} ر.ع</p>
           </div>
 
           <div className="flex items-center space-x-2 space-x-reverse">
@@ -47,7 +47,7 @@ export function CartItem({ item }: CartItemProps) {
           </div>
 
           <div className="text-left">
-            <p className="font-bold text-lg">{(item.price * item.quantity).toFixed(2)} ر.س</p>
+            <p className="font-bold text-lg">{(item.price * item.quantity).toFixed(2)} ر.ع</p>
             <Button
               variant="ghost"
               size="sm"

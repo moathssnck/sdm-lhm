@@ -90,9 +90,9 @@ export function ProductCard({ product, viewMode = "grid" }: ProductCardProps) {
 
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2 space-x-reverse">
-                  <span className="text-2xl font-bold text-green-600">{product.price} ر.س</span>
+                  <span className="text-2xl font-bold text-green-600">{product.price} ر.ع</span>
                   {product.originalPrice && (
-                    <span className="text-lg text-gray-500 line-through">{product.originalPrice} ر.س</span>
+                    <span className="text-lg text-gray-500 line-through">{product.originalPrice} ر.ع</span>
                   )}
                 </div>
 
@@ -148,9 +148,9 @@ export function ProductCard({ product, viewMode = "grid" }: ProductCardProps) {
 
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-2 space-x-reverse">
-              <span className="text-xl font-bold text-green-600">{product.price} ر.س</span>
+              <span className="text-xl font-bold text-green-600">{product.price} ر.ع</span>
               {product.originalPrice && (
-                <span className="text-sm text-gray-500 line-through">{product.originalPrice} ر.س</span>
+                <span className="text-sm text-gray-500 line-through">{product.originalPrice} ر.ع</span>
               )}
             </div>
           </div>

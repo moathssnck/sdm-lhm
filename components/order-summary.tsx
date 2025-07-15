@@ -29,7 +29,7 @@ export function OrderSummary({ items, total }: OrderSummaryProps) {
                 <p className="font-medium">{item.name}</p>
                 <p className="text-sm text-gray-600">الكمية: {item.quantity}</p>
               </div>
-              <span className="font-semibold">{(item.price * item.quantity).toFixed(2)} ر.س</span>
+              <span className="font-semibold">{(item.price * item.quantity).toFixed(2)} ر.ع</span>
             </div>
           ))}
         </div>
@@ -37,23 +37,23 @@ export function OrderSummary({ items, total }: OrderSummaryProps) {
         <div className="border-t pt-4 space-y-2">
           <div className="flex justify-between">
             <span>المجموع الفرعي:</span>
-            <span>{total.toFixed(2)} ر.س</span>
+            <span>{total.toFixed(2)} ر.ع</span>
           </div>
 
           <div className="flex justify-between">
             <span>رسوم التوصيل:</span>
-            <span>{deliveryFee === 0 ? "مجاني" : `${deliveryFee} ر.س`}</span>
+            <span>{deliveryFee === 0 ? "مجاني" : `${deliveryFee} ر.ع`}</span>
           </div>
 
           <div className="flex justify-between">
             <span>ضريبة القيمة المضافة (15%):</span>
-            <span>{tax.toFixed(2)} ر.س</span>
+            <span>{tax.toFixed(2)} ر.ع</span>
           </div>
 
           <div className="border-t pt-2">
             <div className="flex justify-between text-lg font-bold">
               <span>المجموع الكلي:</span>
-              <span>{finalTotal.toFixed(2)} ر.س</span>
+              <span>{finalTotal.toFixed(2)} ر.ع</span>
             </div>
           </div>
         </div>

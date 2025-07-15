@@ -48,7 +48,7 @@ export default function PaymentPage() {
               <p className="text-gray-600">
                 رقم الطلب: <span className="font-semibold">{orderId}</span>
               </p>
-              <p className="text-2xl font-bold text-green-600">{amount.toFixed(2)} ر.س</p>
+              <p className="text-2xl font-bold text-green-600">{amount.toFixed(2)} ر.ع</p>
             </CardContent>
           </Card>
 
