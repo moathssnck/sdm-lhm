@@ -40,7 +40,7 @@ export function Newsletter() {
           <Card className="max-w-2xl mx-auto text-center border-0 shadow-2xl">
             <CardContent className="p-12">
               <CheckCircle className="w-16 h-16 text-green-600 mx-auto mb-6" />
-              <h3 className="text-3xl font-bold text-gray-900 mb-4">مرحباً بك في عائلة مواشي!</h3>
+              <h3 className="text-3xl font-bold text-gray-900 mb-4">مرحباً بك في عائلة ذبيحتي!</h3>
               <p className="text-lg text-gray-600 mb-6">
                 تم تأكيد اشتراكك بنجاح. ستصلك أحدث العروض والمنتجات الجديدة على بريدك الإلكتروني
               </p>

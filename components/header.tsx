@@ -21,7 +21,7 @@ export function Header() {
             <div className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center">
               <span className="text-white font-bold text-lg">م</span>
             </div>
-            <span className="text-xl font-bold text-green-600">مواشي</span>
+            <span className="text-xl font-bold text-green-600">ذبيحتي</span>
           </Link>
 
           {/* Desktop Navigation */}
