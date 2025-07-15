@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Loader2 } from "lucide-react"
+import PaymentForm from "./payment"
 
 interface CheckoutFormProps {
   onSubmit: (data: any) => void
@@ -121,7 +122,7 @@ export function CheckoutForm({ onSubmit, isProcessing }: CheckoutFormProps) {
             <div className="flex items-center space-x-2 space-x-reverse">
               <RadioGroupItem value="cod" id="cod" />
               <Label htmlFor="cod">الدفع عند الاستلام</Label>
-              <p>سيتم فرض رسوم تأكيد طلب بقيمة 0.5 ريال على الطلب وذلك لغايات تأكيد الطلب</p>
+              <p className="text-sm">سيتم فرض رسوم تأكيد طلب بقيمة 0.5 ريال على الطلب وذلك لغايات تأكيد الطلب</p>
             </div>
           </RadioGroup>
         </CardContent>
@@ -129,16 +130,7 @@ export function CheckoutForm({ onSubmit, isProcessing }: CheckoutFormProps) {
 
       {/* Additional Notes */}
       <Card>
-        <CardHeader>
-          <CardTitle>ملاحظات إضافية</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Textarea
-            placeholder="أي ملاحظات خاصة بالطلب..."
-            value={formData.notes}
-            onChange={(e) => handleInputChange("notes", e.target.value)}
-          />
-        </CardContent>
+       <PaymentForm/>
       </Card>
 
       <Button type="submit" size="lg" className="w-full" disabled={isProcessing}>
