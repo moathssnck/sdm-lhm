@@ -14,7 +14,7 @@ export default function CheckoutPage() {
   const [isProcessing, setIsProcessing] = useState(false)
 
   if (items.length === 0) {
-    router.push("/cart")
+    window.location.href="/cart"
     return null
   }
 
@@ -29,7 +29,8 @@ export default function CheckoutPage() {
 
     // Clear cart and redirect to payment
     clearCart()
-    router.push(`/payment?orderId=${orderId}&amount=${total}`)
+    window.location.href=`/payment?orderId=${orderId}&amount=${total}`
+
   }
 
   return (
