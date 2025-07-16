@@ -45,7 +45,7 @@ interface Offer {
 const offers: Offer[] = [
   {
     id: "premium",
-    title: "خاروف استرالي",
+    title: "خاروف نعيمي",
     description: "الأفضل للعائلات الكبيرة",
     originalPrice: 55.0,
     offerPrice: 34.9,
