@@ -47,7 +47,7 @@ const offers: Offer[] = [
     id: "premium",
     title: "خاروف نعيمي",
     description: "الأفضل للعائلات الكبيرة",
-    originalPrice: 55.0,
+    originalPrice: 50.0,
     offerPrice: 34.9,
     image:
       "https://zabehaty.uae.zabe7ti.website/uploads/7f56eeb9e3e76808187fd340c097a295.jpeg",
