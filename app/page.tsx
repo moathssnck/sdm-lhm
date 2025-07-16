@@ -504,8 +504,8 @@ export default function MainPage() {
               معلومات التوصيل
             </DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <div className="grid grid-cols-2 gap-2">
               <div>
                 <Label htmlFor="name">الاسم الكامل</Label>
                 <Input
@@ -539,18 +539,6 @@ export default function MainPage() {
                   setCustomerInfo({ ...customerInfo, address: e.target.value })
                 }
                 placeholder="المنطقة، الشارع، رقم المبنى"
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="city">المدينة</Label>
-              <Input
-                id="city"
-                value={customerInfo.city}
-                onChange={(e) =>
-                  setCustomerInfo({ ...customerInfo, city: e.target.value })
-                }
-                placeholder="مسقط، صلالة، نزوى..."
               />
             </div>
 
