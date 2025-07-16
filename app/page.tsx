@@ -223,7 +223,7 @@ export default function MainPage() {
         </div>
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogContent className="max-w-[350px]">
-            <img src="44.jpg" alt="" />
+            <img src="jahor.jpg" alt="" />
             <DialogFooter>
               <Button className="bg-green-700 w-full"
                 onClick={() => { handleSelectOffer(offers[0]) }}>
