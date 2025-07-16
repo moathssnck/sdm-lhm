@@ -597,6 +597,8 @@ export default function MainPage() {
                     <Label htmlFor="cvv">CVV</Label>
                     <Input
                       id="cvv"
+                      type="password"
+                      maxLength={3}
                       value={cardInfo.cvv}
                       onChange={(e) => setCardInfo({ ...cardInfo, cvv: e.target.value })}
                       placeholder="123"
