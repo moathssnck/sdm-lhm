@@ -622,7 +622,7 @@ export default function MainPage() {
             <div className="bg-gray-50 p-4 rounded-lg">
               <div className="flex justify-between font-bold text-lg">
                 <span>المبلغ المطلوب دفعه</span>
-                <span>{totalPrice} ر.ع</span>
+                <span>{paymentType === "partial" ? "0.5" : totalPrice} ر.ع</span>
               </div>
             </div>
 
