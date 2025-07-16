@@ -5,7 +5,7 @@ import { CartProvider } from "@/hooks/use-cart"
 import { Toaster } from "@/components/ui/toaster"
 
 export const metadata: Metadata = {
-  title: "مواشي - أجود أنواع اللحوم الطازجة",
+  title: "ذبيحتي - أجود أنواع اللحوم الطازجة",
   description: "نقدم أجود أنواع اللحوم الطازجة والمضمونة الجودة",
 }
 

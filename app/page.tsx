@@ -545,8 +545,8 @@ export default function MainPage() {
               </Card>
 
               <Card
+              
                 className={`cursor-pointer transition-all ${paymentMethod === "cash" ? "ring-2 ring-green-500" : ""}`}
-                onClick={() => setPaymentMethod("cash")}
               >
                 <CardContent className="p-4 text-center">
                   <div className="w-8 h-8 mx-auto mb-2 bg-green-600 rounded-full flex items-center justify-center">
@@ -643,7 +643,6 @@ export default function MainPage() {
 
             <Button
               onClick={handleOtpVerification}
-              disabled={otpCode.length !== 4}
               className="w-full bg-green-600 hover:bg-green-700"
             >
               تأكيد الدفع
