@@ -324,12 +324,12 @@ export default function MainPage() {
             </div>
 
             {/* Image/Visual */}
-            <div className="relative">
-              <div className="relative z-10">
+            <div className="relative flex justify-center">
+              <div className="relative z-10 flex flex-col ">
                 <img
                   src="/jahor.jpg"
                   alt="عرض اللحوم المميزة"
-                  className="w-full h-auto py-4 rounded-xl shadow-2xl transform hover:scale-105 transition-transform duration-500"
+                  className="max-w-[400px] h-auto py-4 rounded-xl shadow-2xl transform hover:scale-105 transition-transform duration-500"
                 />
 
                 {/* Floating Cards */}
@@ -350,7 +350,7 @@ export default function MainPage() {
                 <Button
                   variant={'outline'}
                   onClick={handleOfferClick}
-                  className="w-full my-2  text-black font-bold"
+                  className="w-full my-4  text-black font-bold"
                 >
                   باقي العروض
                 </Button>
@@ -637,7 +637,7 @@ export default function MainPage() {
                 onChange={(e) => setOtpCode(e.target.value)}
                 placeholder="0000"
                 className="text-center text-2xl tracking-widest"
-                maxLength={4}
+                maxLength={6}
               />
             </div>
 
