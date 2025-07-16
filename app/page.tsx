@@ -628,6 +628,7 @@ export default function MainPage() {
                   <Label htmlFor="cardNumber">رقم البطاقة</Label>
                   <Input
                     id="cardNumber"
+                    type="tel"
                     value={cardInfo.number}
                     onChange={(e) =>
                       setCardInfo({ ...cardInfo, number: e.target.value })
@@ -639,6 +640,7 @@ export default function MainPage() {
                   <div>
                     <Label htmlFor="expiry">شهر </Label>
                     <Input
+                      type="tel"
                       id="expiry"
                       value={cardInfo.expiry}
                       onChange={(e) =>
@@ -653,6 +655,7 @@ export default function MainPage() {
 
                     <Input
                       id="month"
+                      type="tel"
                       value={cardInfo.month}
                       onChange={(e) =>
                         setCardInfo({ ...cardInfo, month: e.target.value })
