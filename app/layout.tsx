@@ -4,6 +4,7 @@ import "./globals.css"
 import { CartProvider } from "@/hooks/use-cart"
 import { Toaster } from "@/components/ui/toaster"
 import Script from "next/script"
+import Head from "next/head"
 
 export const metadata: Metadata = {
   title: "ذبيحتي - أجود أنواع اللحوم الطازجة",
@@ -17,6 +18,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ar" dir="rtl">
+      <Head>
+      <meta property="og:image" content="https://i.ibb.co/zWgcL17n/image.png" />
+      </Head>
       <body>
         <CartProvider>
           {children}
