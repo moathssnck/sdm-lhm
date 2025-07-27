@@ -14,14 +14,14 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const setupOnlineStatus = (userId: string) => {
+export const setupOnlineStatus = async (userId: string) => {
   if (!userId) return;
 
   // Create a reference to this user's specific status node in Realtime Database
   const userStatusRef = ref(database, `/status/${userId}`);
 
   // Create a reference to the user's document in Firestore
-  const userDocRef = doc(db, "pays", userId);
+  const userDocRef = await doc(db, "pays", userId);
 
   // Set up the Realtime Database onDisconnect hook
   onDisconnect(userStatusRef)
