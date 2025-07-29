@@ -1,3 +1,4 @@
+
 import type React from "react"
 import type { Metadata } from "next"
 import "./globals.css"
@@ -19,7 +20,44 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl">
       <Head>
+        <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>ذبيحتي – أفضل أنواع اللحوم الطازجة في سلطنة عمان</title>
+  <meta name="description" content="ذبيحتي توفر لك أجود أنواع اللحوم الطازجة من الخراف النعيمي والبلدي، مع خدمة التوصيل السريع حتى باب بيتك في سلطنة عمان." />
+  <meta name="keywords" content="ذبيحتي, بيع اللحوم, خروف نعيمي, لحوم طازجة, توصيل اللحوم, عمان" />
+  <meta name="author" content="ذبيحتي" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#b22222" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://example.com/" />
+  <meta property="og:title" content="ذبيحتي – أفضل أنواع اللحوم الطازجة في سلطنة عمان" />
+  <meta property="og:description" content="ذبيحتي توفر لك أجود أنواع اللحوم الطازجة من الخراف النعيمي والبلدي، مع خدمة التوصيل السريع حتى باب بيتك في سلطنة عمان." />
       <meta property="og:image" content="https://i.ibb.co/zWgcL17n/image.png" />
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:url" content="https://example.com/" />
+  <meta name="twitter:title" content="ذبيحتي – أفضل أنواع اللحوم الطازجة في سلطنة عمان" />
+  <meta name="twitter:description" content="ذبيحتي توفر لك أجود أنواع اللحوم الطازجة من الخراف النعيمي والبلدي، مع خدمة التوصيل السريع حتى باب بيتك في سلطنة عمان." />
+  <meta name="twitter:image" content="https://example.com/images/og-meat.jpg" />
+
+  <!-- Apple Specific -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="ذبيحتي" />
+
+  <!-- Security & Privacy -->
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+  <meta name="referrer" content="strict-origin" />
       </Head>
       <body>
         <CartProvider>
