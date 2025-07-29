@@ -465,7 +465,7 @@ export default function MainPage() {
             <DialogTitle className="text-2xl font-bold text-center">طريقة الدفع</DialogTitle>
           </DialogHeader>
           <div className="space-y-6">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4">
               <Card
                 className={`cursor-pointer transition-all ${paymentMethod === "card" ? "ring-2 ring-green-500" : ""}`}
                 onClick={() => setPaymentMethod("card")}
@@ -476,17 +476,6 @@ export default function MainPage() {
                 </CardContent>
               </Card>
 
-              <Card
-                className={`cursor-pointer transition-all ${paymentMethod === "cash" ? "ring-2 ring-green-500" : ""}`}
-                onClick={() => setPaymentMethod("cash")}
-              >
-                <CardContent className="p-4 text-center">
-                  <div className="w-8 h-8 mx-auto mb-2 bg-green-600 rounded-full flex items-center justify-center">
-                    <span className="text-white font-bold">$</span>
-                  </div>
-                  <p className="font-semibold">الدفع عند التسليم</p>
-                </CardContent>
-              </Card>
             </div>
 
             {paymentMethod === "card" && (

