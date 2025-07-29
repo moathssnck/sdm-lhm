@@ -26,12 +26,6 @@ export default function RootLayout({
           {children}
           <Toaster />
         </CartProvider>
-        <Script
-        id="tawk-to-chat-widget"
-        src="https://embed.tawk.to/68863bf1f072f7192b20d434/1j165ka79"
-        strategy="lazyOnload" // Load the script after the page becomes interactive
-     
-      />
       </body>
     </html>
   )
